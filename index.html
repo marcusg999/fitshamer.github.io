@@ -146,10 +146,16 @@
 <body>
   <div class="container">
     <h1>FitShamer AI</h1>
-    <p>Ready to be motivated... or shamed into shape?</p>
+    <p>Ready to be motivated...AKA shamed into shape?</p>
     <input type="text" id="exerciseInput" placeholder="Enter your exercise goal">
     <select id="voiceSelect">
       <option value="">Choose a voice</option>
+      <option value="fred">Fred</option>
+      <option value="albert">Albert</option>
+      <option value="samantha">Samantha</option>
+      <option value="ralph">Ralph</option>
+      <option value="junior">Junior</option>
+      <option value="superstar">Superstar</option>
     </select>
     <button onclick="startShaming()">Start Shaming</button>
     <button onclick="stopShaming()">Stop Shaming</button>
@@ -301,25 +307,6 @@
     "Your workout routine is as non-existent as your vegetable intake.",
     ];
 
-    function populateVoiceList() {
-      const voices = speechSynthesis.getVoices();
-      const voiceSelect = document.getElementById("voiceSelect");
-      
-      voices.forEach((voice, i) => {
-        if (voice.lang === 'en-US') {
-          const option = document.createElement("option");
-          option.textContent = voice.name;
-          option.setAttribute("data-name", voice.name);
-          voiceSelect.appendChild(option);
-        }
-      });
-    }
-
-    populateVoiceList();
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-      speechSynthesis.onvoiceschanged = populateVoiceList;
-    }
-
     function speak(text) {
       if (speechSynthesis.speaking) {
         console.error('speechSynthesis.speaking');
@@ -329,13 +316,28 @@
       utterance.rate = 0.8;
       utterance.pitch = 0.5;
       
-      const selectedOption = document.getElementById("voiceSelect").selectedOptions[0].getAttribute('data-name');
-      const voices = speechSynthesis.getVoices();
-      for (let i = 0; i < voices.length; i++) {
-        if (voices[i].name === selectedOption) {
-          utterance.voice = voices[i];
+      const selectedVoice = document.getElementById("voiceSelect").value;
+      switch(selectedVoice) {
+        case 'fred':
+          utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Fred'));
           break;
-        }
+        case 'albert':
+          utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Albert'));
+          break;
+        case 'samantha':
+          utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Samantha'));
+          break;
+        case 'ralph':
+          utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Ralph'));
+          break;
+        case 'junior':
+          utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Junior'));
+          break;
+        case 'superstar':
+          utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Superstar'));
+          break;
+        default:
+          // Use default voice if none selected
       }
       
       speechSynthesis.speak(utterance);
