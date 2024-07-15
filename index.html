@@ -306,11 +306,12 @@
       const voiceSelect = document.getElementById("voiceSelect");
       
       voices.forEach((voice, i) => {
-        const option = document.createElement("option");
-        option.textContent = `${voice.name} (${voice.lang})`;
-        option.setAttribute("data-lang", voice.lang);
-        option.setAttribute("data-name", voice.name);
-        voiceSelect.appendChild(option);
+        if (voice.lang === 'en-US') {
+          const option = document.createElement("option");
+          option.textContent = voice.name;
+          option.setAttribute("data-name", voice.name);
+          voiceSelect.appendChild(option);
+        }
       });
     }
 
