@@ -1,554 +1,568 @@
-<html><head><base href="https://fitshamer.ai" />
-  <title>FitShamer - Your Motivational Workout Companion</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <style>
-    :root {
-      --background-color: #f2f2f7;
-      --text-color: #000000;
-      --primary-color: #007aff;
-      --secondary-color: #5ac8fa;
-      --accent-color: #ff2d55;
-      --success-color: #34c759;
-      --danger-color: #ff3b30;
-      --warning-color: #ffcc00;
-      --info-color: #5ac8fa;
-      --gray-color: #8e8e93;
-    }
-  
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-  
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--background-color);
-      color: var(--text-color);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-  
-    .container {
-      max-width: 414px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #ffffff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-  
-    h1, h2 {
-      font-weight: 700;
-      margin-bottom: 20px;
-      color: var(--text-color);
-      text-align: center;
-    }
-  
-    h1 { font-size: 34px; }
-    h2 { font-size: 28px; }
-  
-    p {
-      font-size: 17px;
-      margin-bottom: 20px;
-      text-align: center;
-      color: var(--gray-color);
-    }
-  
-    input[type="text"], input[type="time"], select {
-      width: 100%;
-      padding: 15px 20px;
-      margin-bottom: 20px;
-      border: 1px solid var(--gray-color);
-      border-radius: 10px;
-      font-size: 17px;
-      transition: all 0.3s ease;
-      outline: none;
-      background-color: #ffffff;
-    }
-  
-    input[type="text"]:focus, input[type="time"]:focus, select:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
-    }
-  
-    button {
-      background-color: var(--primary-color);
-      color: #ffffff;
-      border: none;
-      padding: 15px 30px;
-      font-size: 17px;
-      font-weight: 600;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-bottom: 20px;
-      width: 100%;
-      text-transform: none;
-    }
-  
-    button:hover {
-      opacity: 0.9;
-    }
-  
-    button:active {
-      transform: scale(0.98);
-    }
-  
-    #shameMessage {
-      font-style: italic;
-      margin: 20px 0;
-      font-size: 17px;
-      background-color: var(--secondary-color);
-      color: #ffffff;
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(90, 200, 250, 0.2);
-      transition: all 0.3s ease;
-    }
-  
-    .goal-meter {
-      width: 100%;
-      height: 10px;
-      background-color: var(--gray-color);
-      border-radius: 5px;
-      overflow: hidden;
-      margin-bottom: 20px;
-    }
-  
-    .goal-progress {
-      width: 0%;
-      height: 100%;
-      background-color: var(--success-color);
-      transition: width 0.5s ease-in-out;
-    }
-  
-    .goal-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-  
-    .goal-buttons button {
-      width: 48%;
-    }
-  
-    .checkbox-container {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-  
-    .checkbox-container input[type="checkbox"] {
-      margin-right: 10px;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      width: 20px;
-      height: 20px;
-      border: 2px solid var(--primary-color);
-      border-radius: 5px;
-      outline: none;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-  
-    .checkbox-container input[type="checkbox"]:checked {
-      background-color: var(--primary-color);
-    }
-  
-    .checkbox-container input[type="checkbox"]:checked::before {
-      content: '\2714';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: #ffffff;
-      font-size: 14px;
-    }
-  
-    .checkbox-container label {
-      font-size: 17px;
-      color: var(--text-color);
-    }
-  
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --background-color: #000000;
-        --text-color: #ffffff;
-        --primary-color: #0080ff;
-        --secondary-color: #64d2ff;
-        --accent-color: #ff375f;
-        --success-color: #30d158;
-        --danger-color: #ff453a;
-        --warning-color: #ffd60a;
-        --info-color: #64d2ff;
-        --gray-color: #8e8e93;
-      }
-  
-      .container {
-        background-color: #1c1c1e;
-      }
-  
-      input[type="text"], input[type="time"], select {
-        background-color: #2c2c2e;
-        color: #ffffff;
-        border-color: #3a3a3c;
-      }
-  
-      #shameMessage {
-        background-color: #2c2c2e;
-      }
-    }
-  </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>FitShamer AI</h1>
-      <p>Ready to be motivated... AKA shamed into shape?</p>
-      <input type="text" id="exerciseInput" placeholder="Enter your exercise goal">
-      <input type="time" id="workoutTime" placeholder="Set workout time">
-      <select id="voiceSelect">
-        <option value="">Choose a voice</option>
-        <option value="samantha">Samantha</option>
-        <option value="ralph">Ralph</option>
-        <option value="junior">Junior</option>
-        <option value="superstar">Superstar</option>
-      </select>
-      <div class="checkbox-container">
-        <input type="checkbox" id="repeatShaming">
-        <label for="repeatShaming">Repeat shaming daily</label>
-      </div>
-      <button onclick="scheduleShaming()">Schedule Shaming</button>
-      <button onclick="startShaming()">Start Shaming Now</button>
-      <button onclick="stopShaming()">Stop Shaming</button>
-      <div id="shameMessage"></div>
-  
-      <h2>Goal Progress</h2>
-      <div class="goal-meter">
-        <div class="goal-progress" id="goalProgress"></div>
-      </div>
-      <p>Did you meet your goal today?</p>
-      <div class="goal-buttons">
-        <button onclick="goalMet(true)">Yes</button>
-        <button onclick="goalMet(false)">No</button>
-      </div>
-      <footer> FITSHAMER AI™  2024</footer>
-    </div>
-  
-    <script>
-      let shameInterval;
-      let selectedVoice;
-      let goalStreak = 0;
-      let shamingTimeout;
-      let repeatShaming = false;
-      const shameMessages = [
-      "Oh, look who decided to sit on the couch instead of working out. Your future self is not impressed.",
-      "I bet your gym membership card is gathering more dust than your muscles are gathering strength.",
-      "Those chips aren't going to burn themselves off, you know. Maybe try lifting something heavier than the TV remote?",
-      "Remember when you said you'd start your fitness journey? Pepperidge Farm remembers.",
-      "Your excuses burn zero calories per hour. Just saying.",
-      "I've seen more movement in a still life painting than in your workout routine.",
-      "Your bed is getting more action than your running shoes. Time to change that, don't you think?",
-      "If procrastination was a workout, you'd be an Olympic athlete by now.",
-      "Your workout clothes called. They said they miss you and wonder if you're ever coming back.",
-      "The only sets and reps you're doing are Netflix sets and popcorn reps. Let's change that!",
-      "I'm pretty sure your couch has a permanent imprint of your body by now.",
-      "Your fitness level is so low, even your Fitbit has given up on you.",
-      "The only thing getting a workout in your house is your refrigerator door.",
-      "Your idea of cardio shouldn't be running away from your responsibilities.",
-      "I've seen glaciers move faster than your fitness progress.",
-      "Your workout plan is like your love life - non-existent.",
-      "The only pound you're losing is the one in your wallet on junk food.",
-      "Your 'rest day' has turned into a 'rest year'. Congrats!",
-      "Your body is a temple, but it's starting to look more like a neglected shrine.",
-      "The only lifting you're doing is lifting that pizza to your mouth.",
-      "Your fitness journey is like your browser history - empty and disappointing.",
-      "I bet you get winded just thinking about exercise.",
-      "Your muscles are so underused, they're considering filing for unemployment.",
-      "The only running you do is running out of excuses.",
-      "Your workout routine is as consistent as Wi-Fi in a tunnel.",
-      "You've got more rolls than a bakery, and less motivation than a sloth.",
-      "The only abs you have are the ones in your alphabet soup.",
-      "Your fitness level is so low, it's in the Earth's core.",
-      "The only thing you're bench pressing is your luck.",
-      "Your idea of a squat is reaching for the TV remote you dropped.",
-      "Your biceps are so non-existent, they're on a milk carton.",
-      "The only laps you're doing are victory laps around the buffet.",
-      "Your workout plan is like your New Year's resolutions - forgotten by February.",
-      "The only gains you're making are in your waistline.",
-      "Your stamina is shorter than your attention span.",
-      "The only weight you're losing is the weight of your wallet at fast food joints.",
-      "Your idea of cross-training is reaching across the table for seconds.",
-      "The only thing getting stronger is your ability to make excuses.",
-      "Your fitness level is so low, even your shadow is out of shape.",
-      "The only mountain you're climbing is the pile of laundry on your chair.",
-      "Your gym membership is feeling more neglected than a houseplant.",
-      "The only reps you're doing are repeating 'I'll start tomorrow' every day.",
-      "Your idea of a power walk is speed-walking to the fridge during commercials.",
-      "The only burn you're feeling is heartburn from all that junk food.",
-      "Your fitness journey is like your dating life - all talk, no action.",
-      "The only lifting you're doing is lifting your spirits with comfort food.",
-      "Your workout routine is as rare as a unicorn sighting.",
-      "The only six-pack you have is in your fridge.",
-      "Your idea of leg day is walking to the mailbox once a week.",
-      "The only crunches you're doing are with potato chips.",
-      "Your fitness goals are like your dreams - always out of reach because you never chase them.",
-      "The only thing you're flexing is your Netflix subscription.",
-      "Your workout intensity is lower than your phone's battery life.",
-      "The only sprints you do are to catch the ice cream truck.",
-      "Your muscles are so inactive, they're considering early retirement.",
-      "The only iron you're pumping is your iron intake from cereal.",
-      "Your fitness level is so low, it's breaking records... in the wrong direction.",
-      "The only squats you're doing are squatting to pick up the TV remote.",
-      "Your workout plan is like your bank account - empty and full of broken promises.",
-      "The only thing getting toned is your excuse-making skills.",
-      "Your fitness journey is like your social life during lockdown - non-existent.",
-      "The only circuit you're completing is the one between your couch and fridge.",
-      "Your idea of cardio is your heart racing when you almost drop your phone.",
-      "The only definition you have is in the dictionary you never open.",
-      "Your workout routine is as consistent as a politician's promises.",
-      "The only reps you're counting are how many times you hit the snooze button.",
-      "Your idea of weight training is carrying all your groceries in one trip.",
-      "The only burn you're feeling is from binge-watching an entire series.",
-      "Your fitness level is so low, it's underground.",
-      "The only gains you're seeing are in your high score on that mobile game.",
-      "Your workout intensity is lower than your motivation to clean your room.",
-      "The only laps you're doing are around the mall's food court.",
-      "Your muscles are so underused, they're considering a long-term lease to couch potatoes.",
-      "The only thing you're lifting is your spirits with another slice of cake.",
-      "Your fitness journey is like your attempts at cooking - a series of unfinished projects.",
-      "The only core workout you're getting is laughing at your own excuses.",
-      "Your idea of a warm-up is microwaving leftovers.",
-      "The only thing getting stronger is your relationship with your delivery guy.",
-      "Your workout plan is like your browser tabs - open but ignored.",
-      "The only thing you're toning is your thumbs from all that scrolling.",
-      "Your fitness level is so low, it's approaching absolute zero.",
-      "The only sprint you're doing is rushing to catch the elevator.",
-      "Your muscles are so inactive, they're considering a career change to professional couch testing.",
-      "The only resistance you're encountering is your resistance to exercise.",
-      "Your workout routine is as rare as a full moon on Friday the 13th.",
-      "The only sets you're completing are sets of excuses.",
-      "Your idea of strength training is opening a tight jar lid.",
-      "The only burn you're experiencing is from sitting too close to the TV.",
-      "Your fitness journey is like your attempts at learning a new language - all good intentions, no follow-through.",
-      "The only reps you're doing are repeatedly hitting 'Next Episode'.",
-      "Your workout intensity is lower than the bar you've set for yourself.",
-      "The only cardio you're getting is your racing heart when you realize you're out of snacks.",
-      "Your muscles are so underused, they're considering filing a complaint for neglect.",
-      "The only lifting you're doing is lifting your spirits with online shopping.",
-      "Your fitness level is so low, it's visible from the Mariana Trench.",
-      "The only definition you have is your high-definition TV.",
-      "Your workout plan is like your to-do list - constantly pushed to tomorrow.",
-      "The only gains you're seeing are in your collection of excuses.",
-      "Your idea of a plank is the wooden floor you're lying on.",
-      "The only burn you're feeling is from your laptop overheating on your lap.",
-      "Your fitness journey is like your attempts at gardening - starts with enthusiasm, ends with neglect.",
-      "The only core engagement you have is with your favorite TV show.",
-      "Your idea of a cool-down is turning up the AC.",
-      "The only thing getting a workout is your credit card at fast food joints.",
-      "Your fitness routine is as non-existent as your willpower at a buffet.",
-      "The only race you're winning is the race to the bottom of the chip bag.",
-      "Your workout schedule is like your diary - blank and forgotten.",
-      "The only lunges you're doing are lunging for the last slice of pizza.",
-      "Your idea of 'feeling the burn' is eating spicy wings on the couch.",
-      "The only marathon you're preparing for is a Netflix marathon.",
-      "Your fitness goals are like your New Year's Eve - all hype, no follow-through.",
-      "The only thing you're lifting is your expectations... and then dropping them.",
-      "Your workout intensity is lower than your standards for junk food.",
-      "The only thing getting shredded is the cheese on your nachos.",
-      "Your fitness journey is like your attempt at adulting - barely started and already exhausted.",
-      "The only gains you're seeing are in your collection of takeout menus.",
-      "Your idea of 'beast mode' is aggressively clicking 'Next Episode'.",
-      "The only squats you're doing are squatting to pet your equally lazy cat.",
-      "Your workout plan is like your romantic life - all fantasy, no action.",
-      "The only thing you're crushing is your dreams of ever having abs.",
-      "Your fitness level is so low, it's become a new unit of measurement.",
-      "The only thing you're running is out of excuses... and breath after climbing stairs.",
-      "Your muscles are so unused, they're considering a class action lawsuit.",
-      "The only definition in your life is 'sedentary'.",
-      "Your workout routine is like your sleep schedule - completely messed up.",
-      "The only reps you're doing are repeating 'I'll start my diet on Monday'.",
-      "Your idea of 'getting physical' is aggressively typing on your keyboard.",
-      "The only burn you're feeling is the burn of shame when you look in the mirror.",
-      "Your fitness journey is like your attempts at budgeting - starts well, ends at the drive-thru.",
-      "The only core work you're doing is core-relating to before and after photos... as the 'before'.",
-      "Your idea of 'leg day' is putting on pants instead of pajamas.",
-      "The only lifting you're doing is lifting your spirits with another pint of ice cream.",
-      "Your workout plan is like your internet browser - full of good intentions but mostly used for junk.",
-      "The only thing you're toning is your ability to make excuses.",
-      "Your fitness level is so low, it's become a cautionary tale.",
-      "The only sprint you're doing is sprinting to catch the ice cream truck... again.",
-      "Your muscles are so inactive, they're considering a change of address.",
-      "The only resistance you're facing is the resistance to get off the couch.",
-      "Your workout routine is as non-existent as your vegetable intake."
-      ];
-  
-      const sarcasticPraise = [
-        "Wow, you actually did it. I'm shocked. No, really.",
-        "Oh look, someone decided to adult today. Gold star for you!",
-        "Congratulations on doing the bare minimum. Your mother must be so proud.",
-        "Amazing! You managed to overcome your natural state of being a couch potato.",
-        "Well, well, well. Looks like miracles do happen after all.",
-        "I'm impressed. I didn't think you had it in you. Neither did your past 5 gym memberships.",
-        "Look at you, defying everyone's expectations. Including your own.",
-        "Bravo! You've successfully avoided being completely useless today.",
-        "I'm genuinely surprised. I thought laziness was your superpower.",
-        "Well done! Your future self might hate you slightly less now."
-      ];
-  
-      const fitnessInsults = [
-        "Your workout routine is about as consistent as a politician's promises.",
-        "I've seen more definition in a bowl of pudding than in your muscles.",
-        "Your dedication to fitness is like a unicorn - mythical and non-existent.",
-        "If laziness burned calories, you'd be an ultra-marathoner by now.",
-        "Your workout plan must be written in invisible ink because I sure can't see any progress.",
-        "The only six-pack you're working on is in your fridge, isn't it?",
-        "Your fitness journey is like a roundabout - going in circles and getting nowhere.",
-        "I bet your idea of weight lifting is carrying all your excuses.",
-        "Your body is a temple, but it looks more like an abandoned shed right now.",
-        "If procrastination was an Olympic sport, you'd be a gold medalist in the fitness category."
-      ];
-  
-      function speak(text) {
-        if (speechSynthesis.speaking) {
-          console.error('speechSynthesis.speaking');
-          return;
-        }
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = 0.8;
-        utterance.pitch = 0.5;
-        
-        const selectedVoice = document.getElementById("voiceSelect").value;
-        switch(selectedVoice) {
-          case 'samantha':
-            utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Samantha'));
-            break;
-          case 'ralph':
-            utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Ralph'));
-            break;
-          case 'junior':
-            utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Junior'));
-            break;
-          case 'superstar':
-            utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Superstar'));
-            break;
-          default:
-            // Use default voice if none selected
-        }
-        
-        speechSynthesis.speak(utterance);
-      }
-  
-      function getRandomMessage(array) {
-        return array[Math.floor(Math.random() * array.length)];
-      }
-  
-      function scheduleShaming() {
-        const exerciseGoal = document.getElementById('exerciseInput').value;
-        const workoutTime = document.getElementById('workoutTime').value;
-        repeatShaming = document.getElementById('repeatShaming').checked;
-        
-        if (!exerciseGoal) {
-          alert("Please enter an exercise goal first!");
-          return;
-        }
-        
-        if (!workoutTime) {
-          alert("Please set a workout time!");
-          return;
-        }
-        
-        if (!document.getElementById("voiceSelect").value) {
-          alert("Please select a voice first!");
-          return;
-        }
-  
-        function scheduleNextShaming() {
-          const now = new Date();
-          const [hours, minutes] = workoutTime.split(':');
-          const scheduledTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-          
-          if (scheduledTime <= now) {
-            scheduledTime.setDate(scheduledTime.getDate() + 1);
-          }
-  
-          const timeUntilShaming = scheduledTime - now;
-  
-          clearTimeout(shamingTimeout);
-          shamingTimeout = setTimeout(() => {
-            startShaming();
-            if (repeatShaming) {
-              scheduleNextShaming();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitShamer</title>
+    <link rel="stylesheet" href="styles.css">
+        <base href="https://fitshamer.ai" />
+          <title>FitShamer - Your Motivational Workout Companion</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+          <style>
+            :root {
+              --background-color: #f2f2f7;
+              --text-color: #000000;
+              --primary-color: #007aff;
+              --secondary-color: #5ac8fa;
+              --accent-color: #ff2d55;
+              --success-color: #34c759;
+              --danger-color: #ff3b30;
+              --warning-color: #ffcc00;
+              --info-color: #5ac8fa;
+              --gray-color: #8e8e93;
             }
-          }, timeUntilShaming);
-  
-          return scheduledTime;
-        }
-  
-        const nextShamingTime = scheduleNextShaming();
-  
-        const message = `Shaming scheduled for ${nextShamingTime.toLocaleTimeString()}${repeatShaming ? ' and will repeat daily' : ''}. Be ready to sweat, or face the consequences!`;
-        document.getElementById('shameMessage').textContent = message;
-        speak(message);
-      }
-  
-      function startShaming() {
-        const exerciseGoal = document.getElementById('exerciseInput').value;
-        if (!exerciseGoal) {
-          alert("Please enter an exercise goal first!");
-          return;
-        }
-        
-        if (!document.getElementById("voiceSelect").value) {
-          alert("Please select a voice first!");
-          return;
-        }
-        
-        clearInterval(shameInterval);
-        shameInterval = setInterval(() => {
-          const message = getRandomMessage(shameMessages);
-          document.getElementById('shameMessage').textContent = message;
-          speak(message + " Remember, your goal is to " + exerciseGoal + ". Get moving!");
-        }, 10000);
-        
-        const initialMessage = "Alright, couch potato! Your goal is to " + exerciseGoal + ". Let's see if you can handle the truth!";
-        document.getElementById('shameMessage').textContent = initialMessage;
-        speak(initialMessage);
-      }
-  
-      function stopShaming() {
-        clearInterval(shameInterval);
-        clearTimeout(shamingTimeout);
-        repeatShaming = false;
-        document.getElementById('repeatShaming').checked = false;
-        const message = "Fine, take a break. But remember, those muscles won't tone themselves!";
-        document.getElementById('shameMessage').textContent = message;
-        speak(message);
-      }
-  
-      function goalMet(met) {
-        if (met) {
-          goalStreak++;
-          const praise = getRandomMessage(sarcasticPraise);
-          document.getElementById('shameMessage').textContent = praise;
-          speak(praise);
-        } else {
-          goalStreak = 0;
-          const insult = getRandomMessage(fitnessInsults);
-          document.getElementById('shameMessage').textContent = insult;
-          speak(insult);
-        }
-        updateGoalMeter();
-      }
-  
-      function updateGoalMeter() {
-        const progress = Math.min(goalStreak * 20, 100);
-        document.getElementById('goalProgress').style.width = progress + '%';
-      }
-    </script>
-  </body></html>
-  
+          
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
+          
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+              background-color: var(--background-color);
+              color: var(--text-color);
+              line-height: 1.6;
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+            }
+          
+            .container {
+              max-width: 414px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #ffffff;
+              min-height: 100vh;
+              display: flex;
+              flex-direction: column;
+            }
+          
+            h1, h2 {
+              font-weight: 700;
+              margin-bottom: 20px;
+              color: var(--text-color);
+              text-align: center;
+            }
+          
+            h1 { font-size: 34px; }
+            h2 { font-size: 28px; }
+          
+            p {
+              font-size: 17px;
+              margin-bottom: 20px;
+              text-align: center;
+              color: var(--gray-color);
+            }
+          
+            input[type="text"], input[type="time"], select {
+              width: 100%;
+              padding: 15px 20px;
+              margin-bottom: 20px;
+              border: 1px solid var(--gray-color);
+              border-radius: 10px;
+              font-size: 17px;
+              transition: all 0.3s ease;
+              outline: none;
+              background-color: #ffffff;
+            }
+          
+            input[type="text"]:focus, input[type="time"]:focus, select:focus {
+              border-color: var(--primary-color);
+              box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+            }
+          
+            button {
+              background-color: var(--primary-color);
+              color: #ffffff;
+              border: none;
+              padding: 15px 30px;
+              font-size: 17px;
+              font-weight: 600;
+              border-radius: 10px;
+              cursor: pointer;
+              transition: all 0.3s ease;
+              margin-bottom: 20px;
+              width: 100%;
+              text-transform: none;
+            }
+          
+            button:hover {
+              opacity: 0.9;
+            }
+          
+            button:active {
+              transform: scale(0.98);
+            }
+          
+            #shameMessage {
+              font-style: italic;
+              margin: 20px 0;
+              font-size: 17px;
+              background-color: var(--secondary-color);
+              color: #ffffff;
+              padding: 20px;
+              border-radius: 10px;
+              text-align: center;
+              box-shadow: 0 4px 10px rgba(90, 200, 250, 0.2);
+              transition: all 0.3s ease;
+            }
+          
+            .goal-meter {
+              width: 100%;
+              height: 10px;
+              background-color: var(--gray-color);
+              border-radius: 5px;
+              overflow: hidden;
+              margin-bottom: 20px;
+            }
+          
+            .goal-progress {
+              width: 0%;
+              height: 100%;
+              background-color: var(--success-color);
+              transition: width 0.5s ease-in-out;
+            }
+          
+            .goal-buttons {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 20px;
+            }
+          
+            .goal-buttons button {
+              width: 48%;
+            }
+          
+            .checkbox-container {
+              display: flex;
+              align-items: center;
+              margin-bottom: 20px;
+            }
+          
+            .checkbox-container input[type="checkbox"] {
+              margin-right: 10px;
+              -webkit-appearance: none;
+              -moz-appearance: none;
+              appearance: none;
+              width: 20px;
+              height: 20px;
+              border: 2px solid var(--primary-color);
+              border-radius: 5px;
+              outline: none;
+              transition: all 0.3s ease;
+              position: relative;
+            }
+          
+            .checkbox-container input[type="checkbox"]:checked {
+              background-color: var(--primary-color);
+            }
+          
+            .checkbox-container input[type="checkbox"]:checked::before {
+              content: '\2714';
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              color: #ffffff;
+              font-size: 14px;
+            }
+          
+            .checkbox-container label {
+              font-size: 17px;
+              color: var(--text-color);
+            }
+          
+            @media (prefers-color-scheme: dark) {
+              :root {
+                --background-color: #000000;
+                --text-color: #ffffff;
+                --primary-color: #0080ff;
+                --secondary-color: #64d2ff;
+                --accent-color: #ff375f;
+                --success-color: #30d158;
+                --danger-color: #ff453a;
+                --warning-color: #ffd60a;
+                --info-color: #64d2ff;
+                --gray-color: #8e8e93;
+              }
+          
+              .container {
+                background-color: #1c1c1e;
+              }
+          
+              input[type="text"], input[type="time"], select {
+                background-color: #2c2c2e;
+                color: #ffffff;
+                border-color: #3a3a3c;
+              }
+          
+              #shameMessage {
+                background-color: #2c2c2e;
+              }
+            }
+          </style>
+</head>
+<body>
+    <html>
+      <body>
+        <div class="container">
+          <h1>FitShamer AI</h1>
+          <p>Ready to be motivated... AKA shamed into shape?</p>
+          <input type="text" id="exerciseInput" placeholder="Enter your exercise goal">
+          <select id="voiceSelect">
+            <option value="">Choose a voice</option>
+            <option value="samantha">Samantha</option>
+            <option value="ralph">Ralph</option>
+            <option value="junior">Junior</option>
+            <option value="superstar">Superstar</option>
+          </select>
+          <label for="repeatShaming">Schedule shaming time</label>
+          <input type="time" id="workoutTime" placeholder="Set workout time">
+          <div class="checkbox-container">
+            <input type="checkbox" id="repeatShaming">
+            <label for="repeatShaming">Repeat shaming</label>
+          </div>
+          <button onclick="scheduleShaming()">Activate Scheduled Shaming</button>
+          <button onclick="startShaming()">Start Shaming Now</button>
+          <button onclick="stopShaming()">Stop Shaming</button>
+          <div id="shameMessage"></div>
+      
+          <h2>Goal Progress</h2>
+          <div class="goal-meter">
+            <div class="goal-progress" id="goalProgress"></div>
+          </div>
+          <p>Did you meet your goal today?</p>
+          <div class="goal-buttons">
+            <button onclick="goalMet(true)">Yes</button>
+            <button onclick="goalMet(false)">No</button>
+          </div>
+          <footer> FITSHAMER AI™  2024</footer>
+        </div>
+      
+        <script>
+          let shameInterval;
+          let selectedVoice;
+          let goalStreak = 0;
+          let shamingTimeout;
+          let repeatShaming = false;
+          const shameMessages = [
+          "Oh, look who decided to sit on the couch instead of working out. Your future self is not impressed.",
+          "I bet your gym membership card is gathering more dust than your muscles are gathering strength.",
+          "Those chips aren't going to burn themselves off, you know. Maybe try lifting something heavier than the TV remote?",
+          "Remember when you said you'd start your fitness journey? Pepperidge Farm remembers.",
+          "Your excuses burn zero calories per hour. Just saying.",
+          "I've seen more movement in a still life painting than in your workout routine.",
+          "Your bed is getting more action than your running shoes. Time to change that, don't you think?",
+          "If procrastination was a workout, you'd be an Olympic athlete by now.",
+          "Your workout clothes called. They said they miss you and wonder if you're ever coming back.",
+          "The only sets and reps you're doing are Netflix sets and popcorn reps. Let's change that!",
+          "I'm pretty sure your couch has a permanent imprint of your body by now.",
+          "Your fitness level is so low, even your Fitbit has given up on you.",
+          "The only thing getting a workout in your house is your refrigerator door.",
+          "Your idea of cardio shouldn't be running away from your responsibilities.",
+          "I've seen glaciers move faster than your fitness progress.",
+          "Your workout plan is like your love life - non-existent.",
+          "The only pound you're losing is the one in your wallet on junk food.",
+          "Your 'rest day' has turned into a 'rest year'. Congrats!",
+          "Your body is a temple, but it's starting to look more like a neglected shrine.",
+          "The only lifting you're doing is lifting that pizza to your mouth.",
+          "Your fitness journey is like your browser history - empty and disappointing.",
+          "I bet you get winded just thinking about exercise.",
+          "Your muscles are so underused, they're considering filing for unemployment.",
+          "The only running you do is running out of excuses.",
+          "Your workout routine is as consistent as Wi-Fi in a tunnel.",
+          "You've got more rolls than a bakery, and less motivation than a sloth.",
+          "The only abs you have are the ones in your alphabet soup.",
+          "Your fitness level is so low, it's in the Earth's core.",
+          "The only thing you're bench pressing is your luck.",
+          "Your idea of a squat is reaching for the TV remote you dropped.",
+          "Your biceps are so non-existent, they're on a milk carton.",
+          "The only laps you're doing are victory laps around the buffet.",
+          "Your workout plan is like your New Year's resolutions - forgotten by February.",
+          "The only gains you're making are in your waistline.",
+          "Your stamina is shorter than your attention span.",
+          "The only weight you're losing is the weight of your wallet at fast food joints.",
+          "Your idea of cross-training is reaching across the table for seconds.",
+          "The only thing getting stronger is your ability to make excuses.",
+          "Your fitness level is so low, even your shadow is out of shape.",
+          "The only mountain you're climbing is the pile of laundry on your chair.",
+          "Your gym membership is feeling more neglected than a houseplant.",
+          "The only reps you're doing are repeating 'I'll start tomorrow' every day.",
+          "Your idea of a power walk is speed-walking to the fridge during commercials.",
+          "The only burn you're feeling is heartburn from all that junk food.",
+          "Your fitness journey is like your dating life - all talk, no action.",
+          "The only lifting you're doing is lifting your spirits with comfort food.",
+          "Your workout routine is as rare as a unicorn sighting.",
+          "The only six-pack you have is in your fridge.",
+          "Your idea of leg day is walking to the mailbox once a week.",
+          "The only crunches you're doing are with potato chips.",
+          "Your fitness goals are like your dreams - always out of reach because you never chase them.",
+          "The only thing you're flexing is your Netflix subscription.",
+          "Your workout intensity is lower than your phone's battery life.",
+          "The only sprints you do are to catch the ice cream truck.",
+          "Your muscles are so inactive, they're considering early retirement.",
+          "The only iron you're pumping is your iron intake from cereal.",
+          "Your fitness level is so low, it's breaking records... in the wrong direction.",
+          "The only squats you're doing are squatting to pick up the TV remote.",
+          "Your workout plan is like your bank account - empty and full of broken promises.",
+          "The only thing getting toned is your excuse-making skills.",
+          "Your fitness journey is like your social life during lockdown - non-existent.",
+          "The only circuit you're completing is the one between your couch and fridge.",
+          "Your idea of cardio is your heart racing when you almost drop your phone.",
+          "The only definition you have is in the dictionary you never open.",
+          "Your workout routine is as consistent as a politician's promises.",
+          "The only reps you're counting are how many times you hit the snooze button.",
+          "Your idea of weight training is carrying all your groceries in one trip.",
+          "The only burn you're feeling is from binge-watching an entire series.",
+          "Your fitness level is so low, it's underground.",
+          "The only gains you're seeing are in your high score on that mobile game.",
+          "Your workout intensity is lower than your motivation to clean your room.",
+          "The only laps you're doing are around the mall's food court.",
+          "Your muscles are so underused, they're considering a long-term lease to couch potatoes.",
+          "The only thing you're lifting is your spirits with another slice of cake.",
+          "Your fitness journey is like your attempts at cooking - a series of unfinished projects.",
+          "The only core workout you're getting is laughing at your own excuses.",
+          "Your idea of a warm-up is microwaving leftovers.",
+          "The only thing getting stronger is your relationship with your delivery guy.",
+          "Your workout plan is like your browser tabs - open but ignored.",
+          "The only thing you're toning is your thumbs from all that scrolling.",
+          "Your fitness level is so low, it's approaching absolute zero.",
+          "The only sprint you're doing is rushing to catch the elevator.",
+          "Your muscles are so inactive, they're considering a career change to professional couch testing.",
+          "The only resistance you're encountering is your resistance to exercise.",
+          "Your workout routine is as rare as a full moon on Friday the 13th.",
+          "The only sets you're completing are sets of excuses.",
+          "Your idea of strength training is opening a tight jar lid.",
+          "The only burn you're experiencing is from sitting too close to the TV.",
+          "Your fitness journey is like your attempts at learning a new language - all good intentions, no follow-through.",
+          "The only reps you're doing are repeatedly hitting 'Next Episode'.",
+          "Your workout intensity is lower than the bar you've set for yourself.",
+          "The only cardio you're getting is your racing heart when you realize you're out of snacks.",
+          "Your muscles are so underused, they're considering filing a complaint for neglect.",
+          "The only lifting you're doing is lifting your spirits with online shopping.",
+          "Your fitness level is so low, it's visible from the Mariana Trench.",
+          "The only definition you have is your high-definition TV.",
+          "Your workout plan is like your to-do list - constantly pushed to tomorrow.",
+          "The only gains you're seeing are in your collection of excuses.",
+          "Your idea of a plank is the wooden floor you're lying on.",
+          "The only burn you're feeling is from your laptop overheating on your lap.",
+          "Your fitness journey is like your attempts at gardening - starts with enthusiasm, ends with neglect.",
+          "The only core engagement you have is with your favorite TV show.",
+          "Your idea of a cool-down is turning up the AC.",
+          "The only thing getting a workout is your credit card at fast food joints.",
+          "Your fitness routine is as non-existent as your willpower at a buffet.",
+          "The only race you're winning is the race to the bottom of the chip bag.",
+          "Your workout schedule is like your diary - blank and forgotten.",
+          "The only lunges you're doing are lunging for the last slice of pizza.",
+          "Your idea of 'feeling the burn' is eating spicy wings on the couch.",
+          "The only marathon you're preparing for is a Netflix marathon.",
+          "Your fitness goals are like your New Year's Eve - all hype, no follow-through.",
+          "The only thing you're lifting is your expectations... and then dropping them.",
+          "Your workout intensity is lower than your standards for junk food.",
+          "The only thing getting shredded is the cheese on your nachos.",
+          "Your fitness journey is like your attempt at adulting - barely started and already exhausted.",
+          "The only gains you're seeing are in your collection of takeout menus.",
+          "Your idea of 'beast mode' is aggressively clicking 'Next Episode'.",
+          "The only squats you're doing are squatting to pet your equally lazy cat.",
+          "Your workout plan is like your romantic life - all fantasy, no action.",
+          "The only thing you're crushing is your dreams of ever having abs.",
+          "Your fitness level is so low, it's become a new unit of measurement.",
+          "The only thing you're running is out of excuses... and breath after climbing stairs.",
+          "Your muscles are so unused, they're considering a class action lawsuit.",
+          "The only definition in your life is 'sedentary'.",
+          "Your workout routine is like your sleep schedule - completely messed up.",
+          "The only reps you're doing are repeating 'I'll start my diet on Monday'.",
+          "Your idea of 'getting physical' is aggressively typing on your keyboard.",
+          "The only burn you're feeling is the burn of shame when you look in the mirror.",
+          "Your fitness journey is like your attempts at budgeting - starts well, ends at the drive-thru.",
+          "The only core work you're doing is core-relating to before and after photos... as the 'before'.",
+          "Your idea of 'leg day' is putting on pants instead of pajamas.",
+          "The only lifting you're doing is lifting your spirits with another pint of ice cream.",
+          "Your workout plan is like your internet browser - full of good intentions but mostly used for junk.",
+          "The only thing you're toning is your ability to make excuses.",
+          "Your fitness level is so low, it's become a cautionary tale.",
+          "The only sprint you're doing is sprinting to catch the ice cream truck... again.",
+          "Your muscles are so inactive, they're considering a change of address.",
+          "The only resistance you're facing is the resistance to get off the couch.",
+          "Your workout routine is as non-existent as your vegetable intake."
+          ];
+      
+          const sarcasticPraise = [
+            "Wow, you actually did it. I'm shocked. No, really.",
+            "Oh look, someone decided to adult today. Gold star for you!",
+            "Congratulations on doing the bare minimum. Your mother must be so proud.",
+            "Amazing! You managed to overcome your natural state of being a couch potato.",
+            "Well, well, well. Looks like miracles do happen after all.",
+            "I'm impressed. I didn't think you had it in you. Neither did your past 5 gym memberships.",
+            "Look at you, defying everyone's expectations. Including your own.",
+            "Bravo! You've successfully avoided being completely useless today.",
+            "I'm genuinely surprised. I thought laziness was your superpower.",
+            "Well done! Your future self might hate you slightly less now."
+          ];
+      
+          const fitnessInsults = [
+            "Your workout routine is about as consistent as a politician's promises.",
+            "I've seen more definition in a bowl of pudding than in your muscles.",
+            "Your dedication to fitness is like a unicorn - mythical and non-existent.",
+            "If laziness burned calories, you'd be an ultra-marathoner by now.",
+            "Your workout plan must be written in invisible ink because I sure can't see any progress.",
+            "The only six-pack you're working on is in your fridge, isn't it?",
+            "Your fitness journey is like a roundabout - going in circles and getting nowhere.",
+            "I bet your idea of weight lifting is carrying all your excuses.",
+            "Your body is a temple, but it looks more like an abandoned shed right now.",
+            "If procrastination was an Olympic sport, you'd be a gold medalist in the fitness category."
+          ];
+      
+          function speak(text) {
+            if (speechSynthesis.speaking) {
+              console.error('speechSynthesis.speaking');
+              return;
+            }
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.8;
+            utterance.pitch = 0.5;
+            
+            const selectedVoice = document.getElementById("voiceSelect").value;
+            switch(selectedVoice) {
+              case 'samantha':
+                utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Samantha'));
+                break;
+              case 'ralph':
+                utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Ralph'));
+                break;
+              case 'junior':
+                utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Junior'));
+                break;
+              case 'superstar':
+                utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Superstar'));
+                break;
+              default:
+                // Use default voice if none selected
+            }
+            
+            speechSynthesis.speak(utterance);
+          }
+      
+          function getRandomMessage(array) {
+            return array[Math.floor(Math.random() * array.length)];
+          }
+      
+          function scheduleShaming() {
+            const exerciseGoal = document.getElementById('exerciseInput').value;
+            const workoutTime = document.getElementById('workoutTime').value;
+            repeatShaming = document.getElementById('repeatShaming').checked;
+            
+            if (!exerciseGoal) {
+              alert("Please enter an exercise goal first!");
+              return;
+            }
+            
+            if (!workoutTime) {
+              alert("Please set a workout time!");
+              return;
+            }
+            
+            if (!document.getElementById("voiceSelect").value) {
+              alert("Please select a voice first!");
+              return;
+            }
+      
+            function scheduleNextShaming() {
+              const now = new Date();
+              const [hours, minutes] = workoutTime.split(':');
+              const scheduledTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+              
+              if (scheduledTime <= now) {
+                scheduledTime.setDate(scheduledTime.getDate() + 1);
+              }
+      
+              const timeUntilShaming = scheduledTime - now;
+      
+              clearTimeout(shamingTimeout);
+              shamingTimeout = setTimeout(() => {
+                startShaming();
+                if (repeatShaming) {
+                  scheduleNextShaming();
+                }
+              }, timeUntilShaming);
+      
+              return scheduledTime;
+            }
+      
+            const nextShamingTime = scheduleNextShaming();
+      
+            const message = `Shaming scheduled for ${nextShamingTime.toLocaleTimeString()}${repeatShaming ? ' and will repeat daily' : ''}. Be ready to sweat, or face the consequences!`;
+            document.getElementById('shameMessage').textContent = message;
+            speak(message);
+          }
+      
+          function startShaming() {
+            const exerciseGoal = document.getElementById('exerciseInput').value;
+            if (!exerciseGoal) {
+              alert("Please enter an exercise goal first!");
+              return;
+            }
+            
+            if (!document.getElementById("voiceSelect").value) {
+              alert("Please select a voice first!");
+              return;
+            }
+            
+            clearInterval(shameInterval);
+            shameInterval = setInterval(() => {
+              const message = getRandomMessage(shameMessages);
+              document.getElementById('shameMessage').textContent = message;
+              speak(message + " Remember, your goal is to " + exerciseGoal + ". Get moving!");
+            }, 10000);
+            
+            const initialMessage = "Alright, couch potato! Your goal is to " + exerciseGoal + ". Let's see if you can handle the truth!";
+            document.getElementById('shameMessage').textContent = initialMessage;
+            speak(initialMessage);
+          }
+      
+          function stopShaming() {
+            clearInterval(shameInterval);
+            clearTimeout(shamingTimeout);
+            repeatShaming = false;
+            document.getElementById('repeatShaming').checked = false;
+            const message = "Fine, take a break. But remember, those muscles won't tone themselves!";
+            document.getElementById('shameMessage').textContent = message;
+            speak(message);
+          }
+      
+          function goalMet(met) {
+            if (met) {
+              goalStreak++;
+              const praise = getRandomMessage(sarcasticPraise);
+              document.getElementById('shameMessage').textContent = praise;
+              speak(praise);
+            } else {
+              goalStreak = 0;
+              const insult = getRandomMessage(fitnessInsults);
+              document.getElementById('shameMessage').textContent = insult;
+              speak(insult);
+            }
+            updateGoalMeter();
+          }
+      
+          function updateGoalMeter() {
+            const progress = Math.min(goalStreak * 20, 100);
+            document.getElementById('goalProgress').style.width = progress + '%';
+          }
+        </script>
+      </body></html>
+      
+
+    <script src="scripts.js"></script>
+</body>
+</html>
